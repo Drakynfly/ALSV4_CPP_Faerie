@@ -3,12 +3,14 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Source Code:     https://github.com/dyanikoglu/ALSV4_CPP
 // Original Author: Doğa Can Yanıkoğlu
-// Contributors:    
+// Contributors:
 
 
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "ALSPlayerCharacter.h"
 #include "Character/ALSBaseCharacter.h"
 #include "ALSCharacter.generated.h"
 
@@ -16,7 +18,7 @@
  * Specialized character class, with additional features like held object etc.
  */
 UCLASS(Blueprintable, BlueprintType)
-class ALSV4_CPP_API AALSCharacter : public AALSBaseCharacter
+class ALSV4_CPP_API AALSCharacter : public AALSPlayerCharacter
 {
 	GENERATED_BODY()
 

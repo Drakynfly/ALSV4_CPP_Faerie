@@ -7,9 +7,7 @@
 
 
 #include "Character/ALSPlayerCameraManager.h"
-
-
-#include "Character/ALSBaseCharacter.h"
+#include "Character/ALSPlayerCharacter.h"
 #include "Character/ALSPlayerController.h"
 #include "Character/Animation/ALSPlayerCameraBehavior.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -21,7 +19,7 @@ AALSPlayerCameraManager::AALSPlayerCameraManager()
 	CameraBehavior->bHiddenInGame = true;
 }
 
-void AALSPlayerCameraManager::OnPossess(AALSBaseCharacter* NewCharacter)
+void AALSPlayerCameraManager::OnPossess(AALSPlayerCharacter* NewCharacter)
 {
 	// Set "Controlled Pawn" when Player Controller Possesses new character. (called from Player Controller)
 	check(NewCharacter);

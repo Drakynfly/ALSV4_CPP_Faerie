@@ -31,6 +31,8 @@ void UALSCharacterMovementComponent::OnMovementUpdated(const float DeltaTime, co
 	{
 		MaxWalkSpeed = NewMaxWalkSpeed;
 		MaxWalkSpeedCrouched = NewMaxWalkSpeed;
+		MaxFlySpeed = NewMaxFlySpeed;
+		MaxSwimSpeed = NewMaxSwimSpeed;
 	}
 }
 
@@ -121,30 +123,30 @@ void UALSCharacterMovementComponent::FSavedMove_My::SetMoveFor(ACharacter* Chara
 	if (CharacterMovement)
 	{
 		bSavedRequestMovementSettingsChange = CharacterMovement->bRequestMovementSettingsChange;
-		MaxSpeed = CharacterMovement->NewMaxWalkSpeed;
+		switch (CharacterMovement->MovementMode)
+		{
+			case MOVE_Walking: MaxSpeed = CharacterMovement->NewMaxWalkSpeed;
+			case MOVE_Flying: MaxSpeed = CharacterMovement->NewMaxFlySpeed;
+			case MOVE_Swimming: MaxSpeed = CharacterMovement->NewMaxSwimSpeed;
+			default: MaxSpeed = CharacterMovement->NewMaxWalkSpeed;
+		}
+
 	}
 }
 
 UALSCharacterMovementComponent::FNetworkPredictionData_Client_My::FNetworkPredictionData_Client_My(
 	const UCharacterMovementComponent& ClientMovement)
-	: Super(ClientMovement)
-{
-}
+	: Super(ClientMovement) {}
 
 FSavedMovePtr UALSCharacterMovementComponent::FNetworkPredictionData_Client_My::AllocateNewMove()
 {
 	return MakeShared<FSavedMove_My>();
 }
 
-void UALSCharacterMovementComponent::Server_SetMaxWalkingSpeed_Implementation(const float UpdateMaxWalkSpeed)
-{
-	NewMaxWalkSpeed = UpdateMaxWalkSpeed;
-}
-
 float UALSCharacterMovementComponent::GetMappedSpeed() const
 {
 	// Map the character's current speed to the configured movement speeds with a range of 0-3,
-	// with 0 = stopped, 1 = the Walk Speed, 2 = the Run Speed, and 3 = the Sprint Speed.
+	// with 0 = stopped, 1 = the Slow Speed, 2 = the Normal Speed, and 3 = the Fast Speed.
 	// This allows us to vary the movement speeds but still use the mapped range in calculations for consistent results
 
 	const float Speed = Velocity.Size2D();
@@ -171,6 +173,11 @@ void UALSCharacterMovementComponent::SetMovementSettings(const FALSMovementSetti
 	CurrentMovementSettings = NewMovementSettings;
 }
 
+void UALSCharacterMovementComponent::Server_SetMaxWalkingSpeed_Implementation(const float UpdateMaxWalkSpeed)
+{
+	NewMaxWalkSpeed = UpdateMaxWalkSpeed;
+}
+
 void UALSCharacterMovementComponent::SetMaxWalkingSpeed(const float UpdateMaxWalkSpeed)
 {
 	if (UpdateMaxWalkSpeed != NewMaxWalkSpeed)
@@ -186,6 +193,52 @@ void UALSCharacterMovementComponent::SetMaxWalkingSpeed(const float UpdateMaxWal
 		{
 			MaxWalkSpeed = UpdateMaxWalkSpeed;
 			MaxWalkSpeedCrouched = UpdateMaxWalkSpeed;
+		}
+	}
+}
+
+void UALSCharacterMovementComponent::Server_SetMaxFlyingSpeed_Implementation(const float UpdateMaxFlySpeed)
+{
+	NewMaxFlySpeed = UpdateMaxFlySpeed;
+}
+
+void UALSCharacterMovementComponent::SetMaxFlyingSpeed(const float UpdateMaxFlySpeed)
+{
+	if (UpdateMaxFlySpeed != NewMaxFlySpeed)
+	{
+		if (PawnOwner->IsLocallyControlled())
+		{
+			NewMaxFlySpeed = UpdateMaxFlySpeed;
+			Server_SetMaxFlyingSpeed(UpdateMaxFlySpeed);
+			bRequestMovementSettingsChange = true;
+			return;
+		}
+		if (!PawnOwner->HasAuthority())
+		{
+			MaxFlySpeed = UpdateMaxFlySpeed;
+		}
+	}
+}
+
+void UALSCharacterMovementComponent::Server_SetMaxSwimmingSpeed_Implementation(const float UpdateMaxSwimSpeed)
+{
+	NewMaxSwimSpeed = UpdateMaxSwimSpeed;
+}
+
+void UALSCharacterMovementComponent::SetMaxSwimmingSpeed(const float UpdateMaxSwimSpeed)
+{
+	if (UpdateMaxSwimSpeed != NewMaxSwimSpeed)
+	{
+		if (PawnOwner->IsLocallyControlled())
+		{
+			NewMaxSwimSpeed = UpdateMaxSwimSpeed;
+			Server_SetMaxSwimmingSpeed(UpdateMaxSwimSpeed);
+			bRequestMovementSettingsChange = true;
+			return;
+		}
+		if (!PawnOwner->HasAuthority())
+		{
+			MaxSwimSpeed = UpdateMaxSwimSpeed;
 		}
 	}
 }

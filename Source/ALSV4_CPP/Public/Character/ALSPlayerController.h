@@ -11,7 +11,7 @@
 #include "GameFramework/PlayerController.h"
 #include "ALSPlayerController.generated.h"
 
-class AALSBaseCharacter;
+class AALSPlayerCharacter;
 
 /**
  * Player controller class
@@ -32,9 +32,9 @@ private:
 	void SetupCamera();
 
 	void SetupDebugInputs();
-	
+
 public:
 	/** Main character reference */
 	UPROPERTY(BlueprintReadOnly, Category = "ALS Player Controller")
-	AALSBaseCharacter* PossessedCharacter = nullptr;
+	AALSPlayerCharacter* PossessedCharacter = nullptr;
 };

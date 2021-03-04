@@ -33,35 +33,35 @@ public:
 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Play Animation")
 	void PlayTransition(const FALSDynamicMontageParams& Parameters);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Play Animation")
 	void PlayTransitionChecked(const FALSDynamicMontageParams& Parameters);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Play Animation")
 	void PlayDynamicTransition(float ReTriggerDelay, FALSDynamicMontageParams Parameters);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Notification")
 	void OnJumped();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Notification")
 	void OnPivot();
 
 	UFUNCTION(BlueprintCallable, Category = "Grounded")
-	void SetGroundedEntryState(EALSGroundedEntryState NewGroundedEntryState)
+	void SetGroundedEntryState(const EALSGroundedEntryState NewGroundedEntryState)
 	{
 		GroundedEntryState = NewGroundedEntryState;
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Grounded")
-	void SetOverlayOverrideState(int32 OverlayOverrideState)
+	void SetOverlayOverrideState(const int32 OverlayOverrideState)
 	{
 		LayerBlendingValues.OverlayOverrideState = OverlayOverrideState;
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Grounded")
-	void SetTrackedHipsDirection(EALSHipsDirection HipsDirection)
+	void SetTrackedHipsDirection(const EALSHipsDirection HipsDirection)
 	{
 		Grounded.TrackedHipsDirection = HipsDirection;
 	}
@@ -91,10 +91,7 @@ public:
 	bool CanDynamicTransition() const;
 
 	/** Return mutable reference of character information to edit them easily inside character class */
-	FALSAnimCharacterInformation& GetCharacterInformationMutable()
-	{
-		return CharacterInformation;
-	}
+	FALSAnimCharacterInformation& GetCharacterInformationMutable() { return CharacterInformation; }
 
 private:
 	void PlayDynamicTransitionDelay();
@@ -172,13 +169,14 @@ private:
 
 protected:
 	/** References */
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Components")
 	AALSBaseCharacter* Character = nullptr;
 
 	/** Character Information */
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Character Information", Meta = (
-		ShowOnlyInnerProperties))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Character Information",
+		Meta = (ShowOnlyInnerProperties))
 	FALSAnimCharacterInformation CharacterInformation;
+
 public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Character Information")
 	FALSMovementState MovementState = EALSMovementState::None;
@@ -199,8 +197,8 @@ public:
 	FALSOverlayState OverlayState = EALSOverlayState::Default;
 protected:
 	/** Anim Graph - Grounded */
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - Grounded", Meta = (
-		ShowOnlyInnerProperties))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - Grounded",
+		Meta = (ShowOnlyInnerProperties))
 	FALSAnimGraphGrounded Grounded;
 public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - Grounded")
@@ -219,13 +217,13 @@ public:
 	FALSMovementDirection MovementDirection = EALSMovementDirection::Forward;
 protected:
 	/** Anim Graph - In Air */
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - In Air", Meta = (
-		ShowOnlyInnerProperties))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - In Air",
+		Meta = (ShowOnlyInnerProperties))
 	FALSAnimGraphInAir InAir;
 
 	/** Anim Graph - Aiming Values */
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - Aiming Values", Meta = (
-		ShowOnlyInnerProperties))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - Aiming Values",
+		Meta = (ShowOnlyInnerProperties))
 	FALSAnimGraphAimingValues AimingValues;
 public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - Aiming Values")
@@ -241,23 +239,23 @@ protected:
 	FALSAnimGraphLayerBlending LayerBlendingValues;
 
 	/** Anim Graph - Foot IK */
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - Foot IK", Meta = (
-		ShowOnlyInnerProperties))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - Foot IK",
+		Meta = (ShowOnlyInnerProperties))
 	FALSAnimGraphFootIK FootIKValues;
 
 	/** Turn In Place */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Turn In Place", Meta = (
-		ShowOnlyInnerProperties))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Turn In Place",
+		Meta = (ShowOnlyInnerProperties))
 	FALSAnimTurnInPlace TurnInPlaceValues;
 
 	/** Rotate In Place */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Rotate In Place", Meta = (
-		ShowOnlyInnerProperties))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Rotate In Place",
+		Meta = (ShowOnlyInnerProperties))
 	FALSAnimRotateInPlace RotateInPlace;
 
 	/** Configuration */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Main Configuration", Meta = (
-		ShowOnlyInnerProperties))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Main Configuration",
+		Meta = (ShowOnlyInnerProperties))
 	FALSAnimConfiguration Config;
 
 	/** Blend Curves */

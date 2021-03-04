@@ -292,10 +292,7 @@ void UALSCharacterAnimInstance::SetFootLocking(const float DeltaSeconds, const F
                                                const FName IKFootBone, float& CurFootLockAlpha, bool& UseFootLockCurve,
                                                FVector& CurFootLockLoc, FRotator& CurFootLockRot)
 {
-	if (GetCurveValue(EnableFootIKCurve) <= 0.0f)
-	{
-		return;
-	}
+	if (GetCurveValue(EnableFootIKCurve) <= 0.0f) { return; }
 
 	// Step 1: Set Local FootLock Curve value
 	float FootLockCurveVal;
@@ -510,8 +507,7 @@ void UALSCharacterAnimInstance::DynamicTransitionCheck()
 	// The currently set transition plays the second half of a 2 foot transition animation, so that only a single foot moves.
 	// Because only the IK_Foot bone can be locked, the separate virtual bone allows the system to know its desired location when locked.
 	FTransform SocketTransformA = GetOwningComponent()->GetSocketTransform(FName(TEXT("ik_foot_l")), RTS_Component);
-	FTransform SocketTransformB = GetOwningComponent()->GetSocketTransform(
-		FName(TEXT("VB foot_target_l")), RTS_Component);
+	FTransform SocketTransformB = GetOwningComponent()->GetSocketTransform(FName(TEXT("VB foot_target_l")), RTS_Component);
 	float Distance = (SocketTransformB.GetLocation() - SocketTransformA.GetLocation()).Size();
 	if (Distance > Config.DynamicTransitionThreshold)
 	{
@@ -646,9 +642,8 @@ FVector UALSCharacterAnimInstance::CalculateRelativeAccelerationAmount() const
 	}
 
 	const float MaxBrakingDec = Character->GetCharacterMovement()->GetMaxBrakingDeceleration();
-	return
-		CharacterInformation.CharacterActorRotation.UnrotateVector(
-			CharacterInformation.Acceleration.GetClampedToMaxSize(MaxBrakingDec) / MaxBrakingDec);
+	return CharacterInformation.CharacterActorRotation.UnrotateVector(
+		CharacterInformation.Acceleration.GetClampedToMaxSize(MaxBrakingDec) / MaxBrakingDec);
 }
 
 float UALSCharacterAnimInstance::CalculateStrideBlend() const

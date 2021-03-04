@@ -62,9 +62,15 @@ class ALSV4_CPP_API UALSCharacterMovementComponent : public UCharacterMovementCo
 	UPROPERTY()
 	float NewMaxWalkSpeed = 0;
 
+	UPROPERTY()
+	float NewMaxFlySpeed = 0;
+
+	UPROPERTY()
+	float NewMaxSwimSpeed = 0;
+
 	UPROPERTY(BlueprintReadOnly, Category = "ALS|Movement System")
 	FALSMovementSettings CurrentMovementSettings;
-	
+
 	// Set Movement Curve (Called in every instance)
 	float GetMappedSpeed() const;
 
@@ -77,4 +83,18 @@ class ALSV4_CPP_API UALSCharacterMovementComponent : public UCharacterMovementCo
 
 	UFUNCTION(Reliable, Server)
 	void Server_SetMaxWalkingSpeed(float UpdateMaxWalkSpeed);
+
+	// Set Max Flying Speed (Called from the owning client)
+	UFUNCTION(BlueprintCallable, Category = "Movement Settings")
+    void SetMaxFlyingSpeed(float UpdateMaxFlySpeed);
+
+	UFUNCTION(Reliable, Server)
+    void Server_SetMaxFlyingSpeed(float UpdateMaxFlySpeed);
+
+	// Set Max Swimming Speed (Called from the owning client)
+	UFUNCTION(BlueprintCallable, Category = "Movement Settings")
+    void SetMaxSwimmingSpeed(float UpdateMaxSwimSpeed);
+
+	UFUNCTION(Reliable, Server)
+    void Server_SetMaxSwimmingSpeed(float UpdateMaxSwimSpeed);
 };

@@ -7,7 +7,6 @@
 
 
 #include "Library/ALSMathLibrary.h"
-
 #include "Components/CapsuleComponent.h"
 #include "Library/ALSCharacterStructLibrary.h"
 

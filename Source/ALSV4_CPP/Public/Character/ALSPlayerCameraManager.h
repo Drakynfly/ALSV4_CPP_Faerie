@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Source Code:     https://github.com/dyanikoglu/ALSV4_CPP
 // Original Author: Doğa Can Yanıkoğlu
-// Contributors:    
+// Contributors:
 
 
 #pragma once
@@ -12,7 +12,7 @@
 #include "Camera/PlayerCameraManager.h"
 #include "ALSPlayerCameraManager.generated.h"
 
-class AALSBaseCharacter;
+class AALSPlayerCharacter;
 
 /**
  * Player camera manager class
@@ -26,7 +26,7 @@ public:
 	AALSPlayerCameraManager();
 
 	UFUNCTION(BlueprintCallable)
-	void OnPossess(AALSBaseCharacter* NewCharacter);
+	void OnPossess(AALSPlayerCharacter* NewCharacter);
 
 	UFUNCTION(BlueprintCallable)
 	float GetCameraBehaviorParam(FName CurveName) const;
@@ -47,7 +47,7 @@ protected:
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	AALSBaseCharacter* ControlledCharacter = nullptr;
+	AALSPlayerCharacter* ControlledCharacter = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	USkeletalMeshComponent* CameraBehavior = nullptr;

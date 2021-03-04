@@ -7,7 +7,7 @@
 
 
 #include "Character/ALSPlayerController.h"
-#include "Character/ALSCharacter.h"
+#include "Character/ALSPlayerCharacter.h"
 #include "Character/ALSPlayerCameraManager.h"
 #include "Components/ALSDebugComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -15,7 +15,7 @@
 void AALSPlayerController::OnPossess(APawn* NewPawn)
 {
 	Super::OnPossess(NewPawn);
-	PossessedCharacter = Cast<AALSBaseCharacter>(NewPawn);
+	PossessedCharacter = Cast<AALSPlayerCharacter>(NewPawn);
 	if (!IsRunningDedicatedServer())
 	{
 		// Servers want to setup camera only in listen servers.
@@ -27,7 +27,7 @@ void AALSPlayerController::OnPossess(APawn* NewPawn)
 void AALSPlayerController::OnRep_Pawn()
 {
 	Super::OnRep_Pawn();
-	PossessedCharacter = Cast<AALSBaseCharacter>(GetPawn());
+	PossessedCharacter = Cast<AALSPlayerCharacter>(GetPawn());
 	SetupCamera();
 }
 
