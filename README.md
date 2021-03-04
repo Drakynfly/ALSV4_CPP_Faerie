@@ -3,7 +3,7 @@
 ![image](https://github.com/Drakynfly/ALSV4_CPP_Faerie/raw/main/Resources/Readme_Content_2.gif)
 
 ## About
-- This fork is my (Guy Lundvall, aka Drakynfly) customized version of ALSV4_CPP by dyanikoglu that adds features that I need for my project, and feel that I should leave here for anyone else who needs it, since I've gotten so much out of this plugin. 
+- This fork is my (Guy Lundvall, aka Drakynfly) customized version of ALSV4_Community by dyanikoglu that adds features that I need for my project, and feel that I should leave here for anyone else who needs it, since I've gotten so much out of this plugin. 
 
 
 ## WARNING

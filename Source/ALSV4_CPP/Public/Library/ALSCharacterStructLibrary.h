@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Source Code:     https://github.com/dyanikoglu/ALSV4_CPP
 // Original Author: Doğa Can Yanıkoğlu
-// Contributors:    
+// Contributors:
 
 
 #pragma once
@@ -24,10 +24,10 @@ struct FALSComponentAndTransform
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FTransform Transform;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	class UPrimitiveComponent* Component = nullptr;
 };
 
@@ -36,19 +36,19 @@ struct FALSCameraSettings
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float TargetArmLength = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FVector SocketOffset;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float LagSpeed = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float RotationLagSpeed = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	bool bDoCollisionTest = true;
 };
 
@@ -57,16 +57,16 @@ struct FALSCameraGaitSettings
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FALSCameraSettings Walking;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FALSCameraSettings Running;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FALSCameraSettings Sprinting;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FALSCameraSettings Crouching;
 };
 
@@ -75,46 +75,46 @@ struct FALSCameraStateSettings
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FALSCameraGaitSettings VelocityDirection;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FALSCameraGaitSettings LookingDirection;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FALSCameraGaitSettings Aiming;
 };
 
 USTRUCT(BlueprintType)
-struct FALSMantleAsset
+struct FALSMantleAsset : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	UAnimMontage* AnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	UCurveVector* PositionCorrectionCurve = nullptr;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FVector StartingOffset;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float LowHeight = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float LowPlayRate = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float LowStartPosition = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float HighHeight = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float HighPlayRate = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float HighStartPosition = 0.0f;
 };
 
@@ -123,19 +123,19 @@ struct FALSMantleParams
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	UAnimMontage* AnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	UCurveVector* PositionCorrectionCurve = nullptr;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float StartingPosition = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float PlayRate = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FVector StartingOffset;
 };
 
@@ -144,19 +144,19 @@ struct FALSMantleTraceSettings
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float MaxLedgeHeight = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float MinLedgeHeight = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float ReachDistance = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float ForwardTraceRadius = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float DownwardTraceRadius = 0.0f;
 };
 
@@ -165,33 +165,29 @@ struct FALSMovementSettings
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
-	float WalkSpeed = 0.0f;
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
+	float SlowSpeed = 0.0f;
 
-	UPROPERTY(EditAnywhere)
-	float RunSpeed = 0.0f;
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
+	float NormalSpeed = 0.0f;
 
-	UPROPERTY(EditAnywhere)
-	float SprintSpeed = 0.0f;
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
+	float FastSpeed = 0.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	UCurveVector* MovementCurve = nullptr;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	UCurveFloat* RotationRateCurve = nullptr;
 
 	float GetSpeedForGait(const EALSGait Gait) const
 	{
 		switch (Gait)
 		{
-		case EALSGait::Running:
-			return RunSpeed;
-		case EALSGait::Sprinting:
-			return SprintSpeed;
-		case EALSGait::Walking:
-			return WalkSpeed;
-		default:
-			return RunSpeed;
+		case EALSGait::Normal: return NormalSpeed;
+		case EALSGait::Fast: return FastSpeed;
+		case EALSGait::Slow: return SlowSpeed;
+		default: return NormalSpeed;
 		}
 	}
 };
@@ -201,11 +197,22 @@ struct FALSMovementStanceSettings
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FALSMovementSettings Standing;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FALSMovementSettings Crouching;
+
+
+	// These are not stances, per se, but they fix the best here. I do not like this, but the other option is to have a
+	// new struct or many more entries in FALSMovementStateSettings. I consider this a workable solution only becuase
+	// this struct isnt used anywhere else.
+
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
+	FALSMovementSettings Flying;
+
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
+	FALSMovementSettings Swimming;
 };
 
 USTRUCT(BlueprintType)
@@ -213,13 +220,13 @@ struct FALSMovementStateSettings : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FALSMovementStanceSettings VelocityDirection;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FALSMovementStanceSettings LookingDirection;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FALSMovementStanceSettings Aiming;
 };
 
@@ -228,21 +235,21 @@ struct FALSRotateInPlaceAsset
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	UAnimSequenceBase* Animation = nullptr;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	FName SlotName;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float SlowTurnRate = 90.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float FastTurnRate = 90.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float SlowPlayRate = 1.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Character Struct Library")
 	float FastPlayRate = 1.0f;
 };

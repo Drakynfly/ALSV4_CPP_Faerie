@@ -16,7 +16,7 @@ UALSCharacterMovementComponent::UALSCharacterMovementComponent(const FObjectInit
 {
 }
 
-void UALSCharacterMovementComponent::OnMovementUpdated(float DeltaTime, const FVector& OldLocation,
+void UALSCharacterMovementComponent::OnMovementUpdated(const float DeltaTime, const FVector& OldLocation,
                                                        const FVector& OldVelocity)
 {
 	Super::OnMovementUpdated(DeltaTime, OldLocation, OldVelocity);
@@ -34,7 +34,7 @@ void UALSCharacterMovementComponent::OnMovementUpdated(float DeltaTime, const FV
 	}
 }
 
-void UALSCharacterMovementComponent::PhysWalking(float deltaTime, int32 Iterations)
+void UALSCharacterMovementComponent::PhysWalking(const float deltaTime, const int32 Iterations)
 {
 	if (CurrentMovementSettings.MovementCurve)
 	{
@@ -67,7 +67,7 @@ float UALSCharacterMovementComponent::GetMaxBrakingDeceleration() const
 	return CurrentMovementSettings.MovementCurve->GetVectorValue(GetMappedSpeed()).Y;
 }
 
-void UALSCharacterMovementComponent::UpdateFromCompressedFlags(uint8 Flags) // Client only
+void UALSCharacterMovementComponent::UpdateFromCompressedFlags(const uint8 Flags) // Client only
 {
 	Super::UpdateFromCompressedFlags(Flags);
 
@@ -109,7 +109,7 @@ uint8 UALSCharacterMovementComponent::FSavedMove_My::GetCompressedFlags() const
 	return Result;
 }
 
-void UALSCharacterMovementComponent::FSavedMove_My::SetMoveFor(ACharacter* Character, float InDeltaTime,
+void UALSCharacterMovementComponent::FSavedMove_My::SetMoveFor(ACharacter* Character, const float InDeltaTime,
                                                                FVector const& NewAccel,
                                                                class FNetworkPredictionData_Client_Character&
                                                                ClientData)
@@ -148,30 +148,30 @@ float UALSCharacterMovementComponent::GetMappedSpeed() const
 	// This allows us to vary the movement speeds but still use the mapped range in calculations for consistent results
 
 	const float Speed = Velocity.Size2D();
-	const float LocWalkSpeed = CurrentMovementSettings.WalkSpeed;
-	const float LocRunSpeed = CurrentMovementSettings.RunSpeed;
-	const float LocSprintSpeed = CurrentMovementSettings.SprintSpeed;
+	const float LocSlowSpeed = CurrentMovementSettings.SlowSpeed;
+	const float LocNormalSpeed = CurrentMovementSettings.NormalSpeed;
+	const float LocFastSpeed = CurrentMovementSettings.FastSpeed;
 
-	if (Speed > LocRunSpeed)
+	if (Speed > LocNormalSpeed)
 	{
-		return FMath::GetMappedRangeValueClamped({LocRunSpeed, LocSprintSpeed}, {2.0f, 3.0f}, Speed);
+		return FMath::GetMappedRangeValueClamped({LocNormalSpeed, LocFastSpeed}, {2.0f, 3.0f}, Speed);
 	}
 
-	if (Speed > LocWalkSpeed)
+	if (Speed > LocSlowSpeed)
 	{
-		return FMath::GetMappedRangeValueClamped({LocWalkSpeed, LocRunSpeed}, {1.0f, 2.0f}, Speed);
+		return FMath::GetMappedRangeValueClamped({LocSlowSpeed, LocNormalSpeed}, {1.0f, 2.0f}, Speed);
 	}
 
-	return FMath::GetMappedRangeValueClamped({0.0f, LocWalkSpeed}, {0.0f, 1.0f}, Speed);
+	return FMath::GetMappedRangeValueClamped({0.0f, LocSlowSpeed}, {0.0f, 1.0f}, Speed);
 }
 
-void UALSCharacterMovementComponent::SetMovementSettings(FALSMovementSettings NewMovementSettings)
+void UALSCharacterMovementComponent::SetMovementSettings(const FALSMovementSettings NewMovementSettings)
 {
 	// Set the current movement settings from the owner
 	CurrentMovementSettings = NewMovementSettings;
 }
 
-void UALSCharacterMovementComponent::SetMaxWalkingSpeed(float UpdateMaxWalkSpeed)
+void UALSCharacterMovementComponent::SetMaxWalkingSpeed(const float UpdateMaxWalkSpeed)
 {
 	if (UpdateMaxWalkSpeed != NewMaxWalkSpeed)
 	{

@@ -1,17 +1,18 @@
 // Project:         Advanced Locomotion System V4 on C++
-// Copyright:       Copyright (C) 2021 Doğa Can Yanıkoğlu
+// Copyright:       Copyright (C) 2020 Doğa Can Yanıkoğlu
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Source Code:     https://github.com/dyanikoglu/ALSV4_CPP
 // Original Author: Jens Bjarne Myhre
-// Contributors: Doğa Can Yanıkoğlu
+// Contributors:
 
+// ReSharper disable CppUE4CodingStandardNamingViolationWarning
+// ReSharper disable CppNonExplicitConvertingConstructor
+// ReSharper disable CppNonExplicitConversionOperator
 #pragma once
 
 #include "CoreMinimal.h"
 #include "ALSCharacterEnumLibrary.h"
-
 #include "ALSStructEnumLibrary.generated.h"
-
 
 USTRUCT(BlueprintType)
 struct FALSMovementState
@@ -19,47 +20,101 @@ struct FALSMovementState
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	EALSMovementState State = EALSMovementState::None;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool None_ = true;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Grounded_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	bool InAir_ = false;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	bool Falling_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	bool Flying_ = false;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	bool Swimming_ = false;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Mantling_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Ragdoll_ = false;
 
 public:
-	FALSMovementState()
-	{
-	}
-
+	FALSMovementState() {}
 	FALSMovementState(const EALSMovementState InitialState) { *this = InitialState; }
 
-	const bool& None() const { return None_; }
-	const bool& Grounded() const { return Grounded_; }
-	const bool& InAir() const { return InAir_; }
-	const bool& Mantling() const { return Mantling_; }
-	const bool& Ragdoll() const { return Ragdoll_; }
+	FORCEINLINE const bool& None() const { return None_; }
+	FORCEINLINE const bool& Grounded() const { return Grounded_; }
+	FORCEINLINE const bool& Falling() const { return Falling_; }
+	FORCEINLINE const bool& Flying() const { return Flying_; }
+	FORCEINLINE const bool& Swimming() const { return Swimming_; }
+	FORCEINLINE const bool& Mantling() const { return Mantling_; }
+	FORCEINLINE const bool& Ragdoll() const { return Ragdoll_; }
 
-	operator EALSMovementState() const { return State; }
+	FORCEINLINE operator EALSMovementState() const { return State; }
 
-	void operator=(const EALSMovementState NewState)
+	FORCEINLINE void operator=(const EALSMovementState NewState)
 	{
 		State = NewState;
 		None_ = State == EALSMovementState::None;
 		Grounded_ = State == EALSMovementState::Grounded;
-		InAir_ = State == EALSMovementState::InAir;
+		Falling_ = State == EALSMovementState::Falling;
+		Swimming_ = State == EALSMovementState::Swimming;
+		Flying_ = State == EALSMovementState::Flying;
 		Mantling_ = State == EALSMovementState::Mantling;
 		Ragdoll_ = State == EALSMovementState::Ragdoll;
+	}
+};
+
+USTRUCT(BlueprintType)
+struct FALSFlightMode
+{
+	GENERATED_BODY()
+
+private:
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	EALSFlightMode FlightMode = EALSFlightMode::None;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	bool None_ = true;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	bool Neutral_ = false;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	bool Raising_ = false;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	bool Lowering_ = false;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	bool Hovering_ = false;
+
+public:
+	FALSFlightMode() {}
+	FALSFlightMode(const EALSFlightMode InitialFlightMode) { *this = InitialFlightMode; }
+
+	FORCEINLINE const bool& None() const { return None_; }
+	FORCEINLINE const bool& Neutral() const { return Neutral_; }
+	FORCEINLINE const bool& Raising() const { return Raising_; }
+	FORCEINLINE const bool& Lowering() const { return Lowering_; }
+	FORCEINLINE const bool& Hovering() const { return Hovering_; }
+
+	FORCEINLINE operator EALSFlightMode() const { return FlightMode; }
+
+	FORCEINLINE void operator=(const EALSFlightMode InitialFlightMode)
+	{
+		FlightMode = InitialFlightMode;
+		None_ = FlightMode == EALSFlightMode::None;
+		Neutral_ = FlightMode == EALSFlightMode::Neutral;
+		Raising_ = FlightMode == EALSFlightMode::Raising;
+		Lowering_ = FlightMode == EALSFlightMode::Lowering;
+		Hovering_ = FlightMode == EALSFlightMode::Hovering;
 	}
 };
 
@@ -69,32 +124,34 @@ struct FALSStance
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	EALSStance Stance = EALSStance::Standing;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Standing_ = true;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Crouching_ = false;
 
-public:
-	FALSStance()
-	{
-	}
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	bool Mounted_ = false;
 
+public:
+	FALSStance() {}
 	FALSStance(const EALSStance InitialStance) { *this = InitialStance; }
 
-	const bool& Standing() const { return Standing_; }
-	const bool& Crouching() const { return Crouching_; }
+	FORCEINLINE const bool& Standing() const { return Standing_; }
+	FORCEINLINE const bool& Crouching() const { return Crouching_; }
+	FORCEINLINE const bool& Mounted() const { return Mounted_; }
 
-	operator EALSStance() const { return Stance; }
+	FORCEINLINE operator EALSStance() const { return Stance; }
 
-	void operator=(const EALSStance NewStance)
+	FORCEINLINE void operator=(const EALSStance NewStance)
 	{
 		Stance = NewStance;
 		Standing_ = Stance == EALSStance::Standing;
 		Crouching_ = Stance == EALSStance::Crouching;
+		Mounted_ = Stance == EALSStance::Mounted;
 	}
 };
 
@@ -104,32 +161,29 @@ struct FALSRotationMode
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	EALSRotationMode RotationMode = EALSRotationMode::VelocityDirection;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool VelocityDirection_ = true;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool LookingDirection_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Aiming_ = false;
 
 public:
-	FALSRotationMode()
-	{
-	}
-
+	FALSRotationMode() {}
 	FALSRotationMode(const EALSRotationMode InitialRotationMode) { *this = InitialRotationMode; }
 
-	const bool& VelocityDirection() const { return VelocityDirection_; }
-	const bool& LookingDirection() const { return LookingDirection_; }
-	const bool& Aiming() const { return Aiming_; }
+	FORCEINLINE const bool& VelocityDirection() const { return VelocityDirection_; }
+	FORCEINLINE const bool& LookingDirection() const { return LookingDirection_; }
+	FORCEINLINE const bool& Aiming() const { return Aiming_; }
 
-	operator EALSRotationMode() const { return RotationMode; }
+	FORCEINLINE operator EALSRotationMode() const { return RotationMode; }
 
-	void operator=(const EALSRotationMode NewRotationMode)
+	FORCEINLINE void operator=(const EALSRotationMode NewRotationMode)
 	{
 		RotationMode = NewRotationMode;
 		VelocityDirection_ = RotationMode == EALSRotationMode::VelocityDirection;
@@ -144,39 +198,33 @@ struct FALSMovementDirection
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	EALSMovementDirection MovementDirection = EALSMovementDirection::Forward;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Forward_ = true;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Right_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Left_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Backward_ = false;
 
 public:
-	FALSMovementDirection()
-	{
-	}
+	FALSMovementDirection() {}
+	FALSMovementDirection(const EALSMovementDirection InitialMovementDirection) { *this = InitialMovementDirection; }
 
-	FALSMovementDirection(const EALSMovementDirection InitialMovementDirection)
-	{
-		*this = InitialMovementDirection;
-	}
+	FORCEINLINE const bool& Forward() const { return Forward_; }
+	FORCEINLINE const bool& Right() const { return Right_; }
+	FORCEINLINE const bool& Left() const { return Left_; }
+	FORCEINLINE const bool& Backward() const { return Backward_; }
 
-	const bool& Forward() const { return Forward_; }
-	const bool& Right() const { return Right_; }
-	const bool& Left() const { return Left_; }
-	const bool& Backward() const { return Backward_; }
+	FORCEINLINE operator EALSMovementDirection() const { return MovementDirection; }
 
-	operator EALSMovementDirection() const { return MovementDirection; }
-
-	void operator=(const EALSMovementDirection NewMovementDirection)
+	FORCEINLINE void operator=(const EALSMovementDirection NewMovementDirection)
 	{
 		MovementDirection = NewMovementDirection;
 		Forward_ = MovementDirection == EALSMovementDirection::Forward;
@@ -192,40 +240,37 @@ struct FALSMovementAction
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	EALSMovementAction Action = EALSMovementAction::None;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool None_ = true;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool LowMantle_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool HighMantle_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Rolling_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool GettingUp_ = false;
 
 public:
-	FALSMovementAction()
-	{
-	}
-
+	FALSMovementAction() {}
 	FALSMovementAction(const EALSMovementAction InitialAction) { *this = InitialAction; }
 
-	const bool& None() const { return None_; }
-	const bool& LowMantle() const { return LowMantle_; }
-	const bool& HighMantle() const { return HighMantle_; }
-	const bool& Rolling() const { return Rolling_; }
-	const bool& GettingUp() const { return GettingUp_; }
+	FORCEINLINE const bool& None() const { return None_; }
+	FORCEINLINE const bool& LowMantle() const { return LowMantle_; }
+	FORCEINLINE const bool& HighMantle() const { return HighMantle_; }
+	FORCEINLINE const bool& Rolling() const { return Rolling_; }
+	FORCEINLINE const bool& GettingUp() const { return GettingUp_; }
 
-	operator EALSMovementAction() const { return Action; }
+	FORCEINLINE operator EALSMovementAction() const { return Action; }
 
-	void operator=(const EALSMovementAction NewAction)
+	FORCEINLINE void operator=(const EALSMovementAction NewAction)
 	{
 		Action = NewAction;
 		None_ = Action == EALSMovementAction::None;
@@ -242,37 +287,34 @@ struct FALSGait
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	EALSGait Gait = EALSGait::Walking;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	EALSGait Gait = EALSGait::Slow;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	bool Walking_ = true;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	bool Slow_ = true;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	bool Running_ = false;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	bool Normal_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	bool Sprinting_ = false;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
+	bool Fast_ = false;
 
 public:
-	FALSGait()
-	{
-	}
-
+	FALSGait() {}
 	FALSGait(const EALSGait InitialGait) { *this = InitialGait; }
 
-	const bool& Walking() const { return Walking_; }
-	const bool& Running() const { return Running_; }
-	const bool& Sprinting() const { return Sprinting_; }
+	FORCEINLINE const bool& Slow() const { return Slow_; }
+	FORCEINLINE const bool& Normal() const { return Normal_; }
+	FORCEINLINE const bool& Fast() const { return Fast_; }
 
-	operator EALSGait() const { return Gait; }
+	FORCEINLINE operator EALSGait() const { return Gait; }
 
-	void operator=(const EALSGait NewGait)
+	FORCEINLINE void operator=(const EALSGait NewGait)
 	{
 		Gait = NewGait;
-		Walking_ = Gait == EALSGait::Walking;
-		Running_ = Gait == EALSGait::Running;
-		Sprinting_ = Gait == EALSGait::Sprinting;
+		Slow_ = Gait == EALSGait::Slow;
+		Normal_ = Gait == EALSGait::Normal;
+		Fast_ = Gait == EALSGait::Fast;
 	}
 };
 
@@ -282,72 +324,69 @@ struct FALSOverlayState
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	EALSOverlayState State = EALSOverlayState::Default;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Default_ = true;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Masculine_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Feminine_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Injured_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool HandsTied_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Rifle_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool PistolOneHanded_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool PistolTwoHanded_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Bow_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Torch_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Binoculars_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Box_ = false;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Barrel_ = false;
 
 public:
-	FALSOverlayState()
-	{
-	}
-
+	FALSOverlayState() {}
 	FALSOverlayState(const EALSOverlayState InitialState) { *this = InitialState; }
 
-	const bool& Default() const { return Default_; }
-	const bool& Masculine() const { return Masculine_; }
-	const bool& Feminine() const { return Feminine_; }
-	const bool& Injured() const { return Injured_; }
-	const bool& HandsTied() const { return HandsTied_; }
-	const bool& Rifle() const { return Rifle_; }
-	const bool& PistolOneHanded() const { return PistolOneHanded_; }
-	const bool& PistolTwoHanded() const { return PistolTwoHanded_; }
-	const bool& Bow() const { return Bow_; }
-	const bool& Torch() const { return Torch_; }
-	const bool& Binoculars() const { return Binoculars_; }
-	const bool& Box() const { return Box_; }
-	const bool& Barrel() const { return Barrel_; }
+	FORCEINLINE const bool& Default() const { return Default_; }
+	FORCEINLINE const bool& Masculine() const { return Masculine_; }
+	FORCEINLINE const bool& Feminine() const { return Feminine_; }
+	FORCEINLINE const bool& Injured() const { return Injured_; }
+	FORCEINLINE const bool& HandsTied() const { return HandsTied_; }
+	FORCEINLINE const bool& Rifle() const { return Rifle_; }
+	FORCEINLINE const bool& PistolOneHanded() const { return PistolOneHanded_; }
+	FORCEINLINE const bool& PistolTwoHanded() const { return PistolTwoHanded_; }
+	FORCEINLINE const bool& Bow() const { return Bow_; }
+	FORCEINLINE const bool& Torch() const { return Torch_; }
+	FORCEINLINE const bool& Binoculars() const { return Binoculars_; }
+	FORCEINLINE const bool& Box() const { return Box_; }
+	FORCEINLINE const bool& Barrel() const { return Barrel_; }
 
-	operator EALSOverlayState() const { return State; }
+	FORCEINLINE operator EALSOverlayState() const { return State; }
 
-	void operator=(const EALSOverlayState NewAction)
+	FORCEINLINE void operator=(const EALSOverlayState NewAction)
 	{
 		State = NewAction;
 		Default_ = State == EALSOverlayState::Default;
@@ -372,28 +411,25 @@ struct FALSGroundedEntryState
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	EALSGroundedEntryState State = EALSGroundedEntryState::None;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool None_ = true;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StructEnumLibrary", meta = (AllowPrivateAccess = true))
 	bool Roll_ = false;
 
 public:
-	FALSGroundedEntryState()
-	{
-	}
-
+	FALSGroundedEntryState() {}
 	FALSGroundedEntryState(const EALSGroundedEntryState InitialState) { *this = InitialState; }
 
-	const bool& None() const { return None_; }
-	const bool& Roll() const { return Roll_; }
+	FORCEINLINE const bool& None() const { return None_; }
+	FORCEINLINE const bool& Roll() const { return Roll_; }
 
-	operator EALSGroundedEntryState() const { return State; }
+	FORCEINLINE operator EALSGroundedEntryState() const { return State; }
 
-	void operator=(const EALSGroundedEntryState NewState)
+	FORCEINLINE void operator=(const EALSGroundedEntryState NewState)
 	{
 		State = NewState;
 		None_ = State == EALSGroundedEntryState::None;

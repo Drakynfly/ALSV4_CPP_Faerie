@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Source Code:     https://github.com/dyanikoglu/ALSV4_CPP
 // Original Author: Doğa Can Yanıkoğlu
-// Contributors:    
+// Contributors:
 
 #include "Components/ALSDebugComponent.h"
 
@@ -28,7 +28,7 @@ UALSDebugComponent::UALSDebugComponent()
 #endif
 }
 
-void UALSDebugComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+void UALSDebugComponent::TickComponent(const float DeltaTime, const ELevelTick TickType,
                                        FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -74,7 +74,7 @@ void UALSDebugComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void UALSDebugComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	OwnerCharacter = Cast<AALSCharacter>(GetOwner());
 
 	if (OwnerCharacter)
@@ -84,7 +84,7 @@ void UALSDebugComponent::BeginPlay()
 	}
 }
 
-void UALSDebugComponent::ToggleGlobalTimeDilationLocal(float TimeDilation)
+void UALSDebugComponent::ToggleGlobalTimeDilationLocal(const float TimeDilation)
 {
 	if (UKismetSystemLibrary::IsStandalone(this))
 	{

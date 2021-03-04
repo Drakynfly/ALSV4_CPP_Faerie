@@ -19,7 +19,7 @@ void UALSCharacterAnimInstance::NativeInitializeAnimation()
 	Character = Cast<AALSBaseCharacter>(TryGetPawnOwner());
 }
 
-void UALSCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
+void UALSCharacterAnimInstance::NativeUpdateAnimation(const float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
@@ -88,9 +88,9 @@ void UALSCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			}
 		}
 	}
-	else if (MovementState.InAir())
+	else if (MovementState.Falling() || MovementState.Flying())
 	{
-		// Do While InAir
+		// Do While In Air
 		UpdateInAirValues(DeltaSeconds);
 	}
 	else if (MovementState.Ragdoll())
@@ -115,7 +115,7 @@ void UALSCharacterAnimInstance::PlayTransitionChecked(const FALSDynamicMontagePa
 	}
 }
 
-void UALSCharacterAnimInstance::PlayDynamicTransition(float ReTriggerDelay, FALSDynamicMontageParams Parameters)
+void UALSCharacterAnimInstance::PlayDynamicTransition(const float ReTriggerDelay, const FALSDynamicMontageParams Parameters)
 {
 	if (bCanPlayDynamicTransition)
 	{
@@ -171,7 +171,7 @@ void UALSCharacterAnimInstance::OnPivotDelay()
 	Grounded.bPivot = false;
 }
 
-void UALSCharacterAnimInstance::UpdateAimingValues(float DeltaSeconds)
+void UALSCharacterAnimInstance::UpdateAimingValues(const float DeltaSeconds)
 {
 	// Interp the Aiming Rotation value to achieve smooth aiming rotation changes.
 	// Interpolating the rotation before calculating the angle ensures the value is not affected by changes
@@ -256,7 +256,7 @@ void UALSCharacterAnimInstance::UpdateLayerValues()
 	LayerBlendingValues.Arm_R_MS = static_cast<float>(1 - FMath::FloorToInt(LayerBlendingValues.Arm_R_LS));
 }
 
-void UALSCharacterAnimInstance::UpdateFootIK(float DeltaSeconds)
+void UALSCharacterAnimInstance::UpdateFootIK(const float DeltaSeconds)
 {
 	FVector FootOffsetLTarget = FVector::ZeroVector;
 	FVector FootOffsetRTarget = FVector::ZeroVector;
@@ -269,7 +269,7 @@ void UALSCharacterAnimInstance::UpdateFootIK(float DeltaSeconds)
 	               FName(TEXT("ik_foot_r")), FootIKValues.FootLock_R_Alpha, FootIKValues.UseFootLockCurve_R,
 	               FootIKValues.FootLock_R_Location, FootIKValues.FootLock_R_Rotation);
 
-	if (MovementState.InAir())
+	if (MovementState.Falling() || MovementState.Flying())
 	{
 		// Reset IK Offsets if In Air
 		SetPelvisIKOffset(DeltaSeconds, FVector::ZeroVector, FVector::ZeroVector);
@@ -288,8 +288,8 @@ void UALSCharacterAnimInstance::UpdateFootIK(float DeltaSeconds)
 	}
 }
 
-void UALSCharacterAnimInstance::SetFootLocking(float DeltaSeconds, FName EnableFootIKCurve, FName FootLockCurve,
-                                               FName IKFootBone, float& CurFootLockAlpha, bool& UseFootLockCurve,
+void UALSCharacterAnimInstance::SetFootLocking(const float DeltaSeconds, const FName EnableFootIKCurve, const FName FootLockCurve,
+                                               const FName IKFootBone, float& CurFootLockAlpha, bool& UseFootLockCurve,
                                                FVector& CurFootLockLoc, FRotator& CurFootLockRot)
 {
 	if (GetCurveValue(EnableFootIKCurve) <= 0.0f)
@@ -336,7 +336,7 @@ void UALSCharacterAnimInstance::SetFootLocking(float DeltaSeconds, FName EnableF
 	}
 }
 
-void UALSCharacterAnimInstance::SetFootLockOffsets(float DeltaSeconds, FVector& LocalLoc, FRotator& LocalRot)
+void UALSCharacterAnimInstance::SetFootLockOffsets(const float DeltaSeconds, FVector& LocalLoc, FRotator& LocalRot)
 {
 	FRotator RotationDifference = FRotator::ZeroRotator;
 	// Use the delta between the current and last updated rotation to find how much the foot should be rotated
@@ -363,7 +363,7 @@ void UALSCharacterAnimInstance::SetFootLockOffsets(float DeltaSeconds, FVector& 
 	LocalRot = Delta;
 }
 
-void UALSCharacterAnimInstance::SetPelvisIKOffset(float DeltaSeconds, FVector FootOffsetLTarget,
+void UALSCharacterAnimInstance::SetPelvisIKOffset(const float DeltaSeconds, FVector FootOffsetLTarget,
                                                   FVector FootOffsetRTarget)
 {
 	// Calculate the Pelvis Alpha by finding the average Foot IK weight. If the alpha is 0, clear the offset.
@@ -387,7 +387,7 @@ void UALSCharacterAnimInstance::SetPelvisIKOffset(float DeltaSeconds, FVector Fo
 	}
 }
 
-void UALSCharacterAnimInstance::ResetIKOffsets(float DeltaSeconds)
+void UALSCharacterAnimInstance::ResetIKOffsets(const float DeltaSeconds)
 {
 	// Interp Foot IK offsets back to 0
 	FootIKValues.FootOffset_L_Location = FMath::VInterpTo(FootIKValues.FootOffset_L_Location,
@@ -437,7 +437,7 @@ void UALSCharacterAnimInstance::SetFootOffsets(float DeltaSeconds, FName EnableF
 		FVector ImpactNormal = HitResult.ImpactNormal;
 
 		// Step 1.1: Find the difference in location from the Impact point and the expected (flat) floor location.
-		// These values are offset by the nomrmal multiplied by the
+		// These values are offset by the normal multiplied by the
 		// foot height to get better behavior on angled surfaces.
 		CurLocationTarget = (ImpactPoint + ImpactNormal * Config.FootHeight) -
 			(IKFootFloorLoc + FVector(0, 0, Config.FootHeight));
@@ -473,11 +473,11 @@ void UALSCharacterAnimInstance::RotateInPlaceCheck()
 	}
 }
 
-void UALSCharacterAnimInstance::TurnInPlaceCheck(float DeltaSeconds)
+void UALSCharacterAnimInstance::TurnInPlaceCheck(const float DeltaSeconds)
 {
 	// Step 1: Check if Aiming angle is outside of the Turn Check Min Angle, and if the Aim Yaw Rate is below the Aim Yaw Rate Limit.
 	// If so, begin counting the Elapsed Delay Time. If not, reset the Elapsed Delay Time.
-	// This ensures the conditions remain true for a sustained peroid of time before turning in place.
+	// This ensures the conditions remain true for a sustained period of time before turning in place.
 	if (FMath::Abs(AimingValues.AimingAngle.X) <= TurnInPlaceValues.TurnCheckMinAngle ||
 		CharacterInformation.AimYawRate >= TurnInPlaceValues.AimYawRateLimit)
 	{
@@ -539,7 +539,7 @@ void UALSCharacterAnimInstance::DynamicTransitionCheck()
 	}
 }
 
-void UALSCharacterAnimInstance::UpdateMovementValues(float DeltaSeconds)
+void UALSCharacterAnimInstance::UpdateMovementValues(const float DeltaSeconds)
 {
 	// Interp and set the Velocity Blend.
 	const FALSVelocityBlend& TargetBlend = CalculateVelocityBlend();
@@ -587,7 +587,7 @@ void UALSCharacterAnimInstance::UpdateRotationValues()
 	Grounded.RYaw = LROffset.Y;
 }
 
-void UALSCharacterAnimInstance::UpdateInAirValues(float DeltaSeconds)
+void UALSCharacterAnimInstance::UpdateInAirValues(const float DeltaSeconds)
 {
 	// Update the fall speed. Setting this value only while in the air allows you to use it within the AnimGraph for the landing strength.
 	// If not, the Z velocity would return to 0 on landing.
@@ -609,8 +609,8 @@ void UALSCharacterAnimInstance::UpdateRagdollValues()
 	FlailRate = FMath::GetMappedRangeValueClamped({0.0f, 1000.0f}, {0.0f, 1.0f}, VelocityLength);
 }
 
-float UALSCharacterAnimInstance::GetAnimCurveClamped(const FName& Name, float Bias, float ClampMin,
-                                                     float ClampMax) const
+float UALSCharacterAnimInstance::GetAnimCurveClamped(const FName& Name, const float Bias, const float ClampMin,
+                                                     const float ClampMax) const
 {
 	return FMath::Clamp(GetCurveValue(Name) + Bias, ClampMin, ClampMax);
 }
@@ -670,7 +670,7 @@ float UALSCharacterAnimInstance::CalculateStrideBlend() const
 float UALSCharacterAnimInstance::CalculateWalkRunBlend() const
 {
 	// Calculate the Walk Run Blend. This value is used within the Blendspaces to blend between walking and running.
-	return Gait.Walking() ? 0.0f : 1.0;
+	return Gait.Slow() ? 0.0f : 1.0;
 }
 
 float UALSCharacterAnimInstance::CalculateStandingPlayRate() const
@@ -692,7 +692,7 @@ float UALSCharacterAnimInstance::CalculateStandingPlayRate() const
 
 float UALSCharacterAnimInstance::CalculateDiagonalScaleAmount() const
 {
-	// Calculate the Diagnal Scale Amount. This value is used to scale the Foot IK Root bone to make the Foot IK bones
+	// Calculate the Diagonal Scale Amount. This value is used to scale the Foot IK Root bone to make the Foot IK bones
 	// cover more distance on the diagonal blends. Without scaling, the feet would not move far enough on the diagonal
 	// direction due to the linear translational blending of the IK bones. The curve is used to easily map the value.
 	return DiagonalScaleAmountCurve->GetFloatValue(FMath::Abs(VelocityBlend.F + VelocityBlend.B));
@@ -701,7 +701,7 @@ float UALSCharacterAnimInstance::CalculateDiagonalScaleAmount() const
 float UALSCharacterAnimInstance::CalculateCrouchingPlayRate() const
 {
 	// Calculate the Crouching Play Rate by dividing the Character's speed by the Animated Speed.
-	// This value needs to be separate from the standing play rate to improve the blend from crocuh to stand while in motion.
+	// This value needs to be separate from the standing play rate to improve the blend from crouch to stand while in motion.
 	return FMath::Clamp(
 		CharacterInformation.Speed / Config.AnimatedCrouchSpeed / Grounded.StrideBlend / GetOwningComponent()->
 		GetComponentScale().Z,
@@ -712,7 +712,7 @@ float UALSCharacterAnimInstance::CalculateLandPrediction() const
 {
 	// Calculate the land prediction weight by tracing in the velocity direction to find a walkable surface the character
 	// is falling toward, and getting the 'Time' (range of 0-1, 1 being maximum, 0 being about to land) till impact.
-	// The Land Prediction Curve is used to control how the time affects the final weight for a smooth blend. 
+	// The Land Prediction Curve is used to control how the time affects the final weight for a smooth blend.
 	if (InAir.FallSpeed >= -200.0f)
 	{
 		return 0.0f;
@@ -768,9 +768,9 @@ FALSLeanAmount UALSCharacterAnimInstance::CalculateAirLeanAmount() const
 EALSMovementDirection UALSCharacterAnimInstance::CalculateMovementDirection() const
 {
 	// Calculate the Movement Direction. This value represents the direction the character is moving relative to the camera
-	// during the Looking Cirection / Aiming rotation modes, and is used in the Cycle Blending Anim Layers to blend to the
+	// during the Looking Direction / Aiming rotation modes, and is used in the Cycle Blending Anim Layers to blend to the
 	// appropriate directional states.
-	if (Gait.Sprinting() || RotationMode.VelocityDirection())
+	if (Gait.Fast() || RotationMode.VelocityDirection())
 	{
 		return EALSMovementDirection::Forward;
 	}
@@ -780,8 +780,8 @@ EALSMovementDirection UALSCharacterAnimInstance::CalculateMovementDirection() co
 	return UALSMathLibrary::CalculateQuadrant(MovementDirection, 70.0f, -70.0f, 110.0f, -110.0f, 5.0f, Delta.Yaw);
 }
 
-void UALSCharacterAnimInstance::TurnInPlace(FRotator TargetRotation, float PlayRateScale, float StartTime,
-                                            bool OverrideCurrent)
+void UALSCharacterAnimInstance::TurnInPlace(const FRotator TargetRotation, const float PlayRateScale,
+											const float StartTime, const bool OverrideCurrent)
 {
 	// Step 1: Set Turn Angle
 	FRotator Delta = TargetRotation - CharacterInformation.CharacterActorRotation;

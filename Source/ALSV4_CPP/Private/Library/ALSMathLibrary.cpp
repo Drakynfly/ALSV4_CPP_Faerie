@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Source Code:     https://github.com/dyanikoglu/ALSV4_CPP
 // Original Author: Doğa Can Yanıkoğlu
-// Contributors:    
+// Contributors:
 
 
 #include "Library/ALSMathLibrary.h"
@@ -33,19 +33,18 @@ TPair<float, float> UALSMathLibrary::FixDiagonalGamepadValues(const float X, con
 
 FVector UALSMathLibrary::GetCapsuleBaseLocation(const float ZOffset, UCapsuleComponent* Capsule)
 {
-	return Capsule->GetComponentLocation() -
-		Capsule->GetUpVector() * (Capsule->GetScaledCapsuleHalfHeight() + ZOffset);
+	return Capsule->GetComponentLocation() - Capsule->GetUpVector() * (Capsule->GetScaledCapsuleHalfHeight() + ZOffset);
 }
 
 FVector UALSMathLibrary::GetCapsuleLocationFromBase(FVector BaseLocation, const float ZOffset,
-                                                    UCapsuleComponent* Capsule)
+													UCapsuleComponent* Capsule)
 {
 	BaseLocation.Z += Capsule->GetScaledCapsuleHalfHeight() + ZOffset;
 	return BaseLocation;
 }
 
-bool UALSMathLibrary::CapsuleHasRoomCheck(UCapsuleComponent* Capsule, FVector TargetLocation, float HeightOffset,
-                                          float RadiusOffset)
+bool UALSMathLibrary::CapsuleHasRoomCheck(UCapsuleComponent* Capsule, const FVector TargetLocation,
+										  const float HeightOffset, float RadiusOffset)
 {
 	// Perform a trace to see if the capsule has room to be at the target location.
 	const float ZTarget = Capsule->GetScaledCapsuleHalfHeight_WithoutHemisphere() - RadiusOffset + HeightOffset;
@@ -68,19 +67,16 @@ bool UALSMathLibrary::CapsuleHasRoomCheck(UCapsuleComponent* Capsule, FVector Ta
 	return !(HitResult.bBlockingHit || HitResult.bStartPenetrating);
 }
 
-bool UALSMathLibrary::AngleInRange(float Angle, float MinAngle, float MaxAngle, float Buffer, bool IncreaseBuffer)
+bool UALSMathLibrary::AngleInRange(const float Angle, const float MinAngle, const float MaxAngle, const float Buffer,
+								   const bool IncreaseBuffer)
 {
-	if (IncreaseBuffer)
-	{
-		return Angle >= MinAngle - Buffer && Angle <= MaxAngle + Buffer;
-	}
+	if (IncreaseBuffer) { return Angle >= MinAngle - Buffer && Angle <= MaxAngle + Buffer; }
 	return Angle >= MinAngle + Buffer && Angle <= MaxAngle - Buffer;
 }
 
-EALSMovementDirection UALSMathLibrary::CalculateQuadrant(EALSMovementDirection Current, float FRThreshold,
-                                                         float FLThreshold,
-                                                         float BRThreshold, float BLThreshold, float Buffer,
-                                                         float Angle)
+EALSMovementDirection UALSMathLibrary::CalculateQuadrant(const EALSMovementDirection Current, const float FRThreshold,
+														 const float FLThreshold, const float BRThreshold,
+														 const float BLThreshold, const float Buffer, const float Angle)
 {
 	// Take the input angle and determine its quadrant (direction). Use the current Movement Direction to increase or
 	// decrease the buffers on the angle ranges for each quadrant.
@@ -89,18 +85,15 @@ EALSMovementDirection UALSMathLibrary::CalculateQuadrant(EALSMovementDirection C
 	{
 		return EALSMovementDirection::Forward;
 	}
-
 	if (AngleInRange(Angle, FRThreshold, BRThreshold, Buffer,
 	                 Current != EALSMovementDirection::Right || Current != EALSMovementDirection::Left))
 	{
 		return EALSMovementDirection::Right;
 	}
-
 	if (AngleInRange(Angle, BLThreshold, FLThreshold, Buffer,
 	                 Current != EALSMovementDirection::Right || Current != EALSMovementDirection::Left))
 	{
 		return EALSMovementDirection::Left;
 	}
-
 	return EALSMovementDirection::Backward;
 }

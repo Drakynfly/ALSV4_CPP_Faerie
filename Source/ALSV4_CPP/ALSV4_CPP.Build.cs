@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Source Code:     https://github.com/dyanikoglu/ALSV4_CPP
 // Original Author: Doğa Can Yanıkoğlu
-// Contributors:  
+// Contributors:
 
 using UnrealBuildTool;
 
@@ -14,8 +14,20 @@ public class ALSV4_CPP : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(new[]
-			{"Core", "CoreUObject", "Engine", "InputCore", "NavigationSystem", "AIModule", "GameplayTasks"});
+			{
+				"Core",
+				"CoreUObject",
+				"Engine",
+				"InputCore",
+				"NavigationSystem",
+				"AIModule",
+				"GameplayTasks",
+				"DeveloperSettings"
+			});
 
-		PrivateDependencyModuleNames.AddRange(new[] {"Slate", "SlateCore"});
+		PrivateDependencyModuleNames.AddRange(new[]
+		{
+			"SlateCore", "Slate"
+		});
 	}
 }

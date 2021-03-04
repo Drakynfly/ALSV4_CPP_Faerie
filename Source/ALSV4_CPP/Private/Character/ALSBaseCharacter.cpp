@@ -7,14 +7,11 @@
 
 
 #include "Character/ALSBaseCharacter.h"
-
-
 #include "Character/Animation/ALSCharacterAnimInstance.h"
 #include "Character/Animation/ALSPlayerCameraBehavior.h"
 #include "Library/ALSMathLibrary.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/TimelineComponent.h"
-#include "Curves/CurveVector.h"
 #include "Curves/CurveFloat.h"
 #include "Character/ALSCharacterMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -85,7 +82,7 @@ void AALSBaseCharacter::OnBreakfall_Implementation()
 	Replicated_PlayMontage(GetRollAnimation(), 1.35);
 }
 
-void AALSBaseCharacter::Replicated_PlayMontage_Implementation(UAnimMontage* Montage, float PlayRate)
+void AALSBaseCharacter::Replicated_PlayMontage_Implementation(UAnimMontage* Montage, const float PlayRate)
 {
 	// Roll: Simply play a Root Motion Montage.
 	MainAnimInstance->Montage_Play(Montage, PlayRate);
@@ -156,13 +153,13 @@ void AALSBaseCharacter::PreInitializeComponents()
 	}
 }
 
-void AALSBaseCharacter::SetAimYawRate(float NewAimYawRate)
+void AALSBaseCharacter::SetAimYawRate(const float NewAimYawRate)
 {
 	AimYawRate = NewAimYawRate;
 	MainAnimInstance->GetCharacterInformationMutable().AimYawRate = AimYawRate;
 }
 
-void AALSBaseCharacter::Tick(float DeltaTime)
+void AALSBaseCharacter::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -174,7 +171,7 @@ void AALSBaseCharacter::Tick(float DeltaTime)
 		UpdateCharacterMovement();
 		UpdateGroundedRotation(DeltaTime);
 	}
-	else if (MovementState == EALSMovementState::InAir)
+	else if (MovementState == EALSMovementState::Falling)
 	{
 		UpdateInAirRotation(DeltaTime);
 	}
@@ -270,7 +267,7 @@ void AALSBaseCharacter::RagdollEnd()
 	}
 }
 
-void AALSBaseCharacter::Server_SetMeshLocationDuringRagdoll_Implementation(FVector MeshLocation)
+void AALSBaseCharacter::Server_SetMeshLocationDuringRagdoll_Implementation(const FVector MeshLocation)
 {
 	TargetRagdollLocation = MeshLocation;
 }
@@ -320,7 +317,7 @@ void AALSBaseCharacter::SetGait(const EALSGait NewGait)
 }
 
 
-void AALSBaseCharacter::SetDesiredStance(EALSStance NewStance)
+void AALSBaseCharacter::SetDesiredStance(const EALSStance NewStance)
 {
 	DesiredStance = NewStance;
 	if (GetLocalRole() == ROLE_AutonomousProxy)
@@ -329,7 +326,7 @@ void AALSBaseCharacter::SetDesiredStance(EALSStance NewStance)
 	}
 }
 
-void AALSBaseCharacter::Server_SetDesiredStance_Implementation(EALSStance NewStance)
+void AALSBaseCharacter::Server_SetDesiredStance_Implementation(const EALSStance NewStance)
 {
 	SetDesiredStance(NewStance);
 }
@@ -343,12 +340,12 @@ void AALSBaseCharacter::SetDesiredGait(const EALSGait NewGait)
 	}
 }
 
-void AALSBaseCharacter::Server_SetDesiredGait_Implementation(EALSGait NewGait)
+void AALSBaseCharacter::Server_SetDesiredGait_Implementation(const EALSGait NewGait)
 {
 	SetDesiredGait(NewGait);
 }
 
-void AALSBaseCharacter::SetDesiredRotationMode(EALSRotationMode NewRotMode)
+void AALSBaseCharacter::SetDesiredRotationMode(const EALSRotationMode NewRotMode)
 {
 	DesiredRotationMode = NewRotMode;
 	if (GetLocalRole() == ROLE_AutonomousProxy)
@@ -357,7 +354,7 @@ void AALSBaseCharacter::SetDesiredRotationMode(EALSRotationMode NewRotMode)
 	}
 }
 
-void AALSBaseCharacter::Server_SetDesiredRotationMode_Implementation(EALSRotationMode NewRotMode)
+void AALSBaseCharacter::Server_SetDesiredRotationMode_Implementation(const EALSRotationMode NewRotMode)
 {
 	SetDesiredRotationMode(NewRotMode);
 }
@@ -377,7 +374,7 @@ void AALSBaseCharacter::SetRotationMode(const EALSRotationMode NewRotationMode)
 	}
 }
 
-void AALSBaseCharacter::Server_SetRotationMode_Implementation(EALSRotationMode NewRotationMode)
+void AALSBaseCharacter::Server_SetRotationMode_Implementation(const EALSRotationMode NewRotationMode)
 {
 	SetRotationMode(NewRotationMode);
 }
@@ -397,7 +394,7 @@ void AALSBaseCharacter::SetViewMode(const EALSViewMode NewViewMode)
 	}
 }
 
-void AALSBaseCharacter::Server_SetViewMode_Implementation(EALSViewMode NewViewMode)
+void AALSBaseCharacter::Server_SetViewMode_Implementation(const EALSViewMode NewViewMode)
 {
 	SetViewMode(NewViewMode);
 }
@@ -418,7 +415,7 @@ void AALSBaseCharacter::SetOverlayState(const EALSOverlayState NewState)
 }
 
 
-void AALSBaseCharacter::Server_SetOverlayState_Implementation(EALSOverlayState NewState)
+void AALSBaseCharacter::Server_SetOverlayState_Implementation(const EALSOverlayState NewState)
 {
 	SetOverlayState(NewState);
 }
@@ -460,14 +457,14 @@ void AALSBaseCharacter::EventOnJumped()
 	MainAnimInstance->OnJumped();
 }
 
-void AALSBaseCharacter::Server_PlayMontage_Implementation(UAnimMontage* Montage, float PlayRate)
+void AALSBaseCharacter::Server_PlayMontage_Implementation(UAnimMontage* Montage, const float PlayRate)
 {
 	MainAnimInstance->Montage_Play(Montage, PlayRate);
 	ForceNetUpdate();
 	Multicast_PlayMontage(Montage, PlayRate);
 }
 
-void AALSBaseCharacter::Multicast_PlayMontage_Implementation(UAnimMontage* Montage, float PlayRate)
+void AALSBaseCharacter::Multicast_PlayMontage_Implementation(UAnimMontage* Montage, const float PlayRate)
 {
 	if (!IsLocallyControlled())
 	{
@@ -493,7 +490,7 @@ void AALSBaseCharacter::Multicast_RagdollStart_Implementation()
 	RagdollStart();
 }
 
-void AALSBaseCharacter::Server_RagdollEnd_Implementation(FVector CharacterLocation)
+void AALSBaseCharacter::Server_RagdollEnd_Implementation(const FVector CharacterLocation)
 {
 	Multicast_RagdollEnd(CharacterLocation);
 }
@@ -503,7 +500,7 @@ void AALSBaseCharacter::Multicast_RagdollEnd_Implementation(FVector CharacterLoc
 	RagdollEnd();
 }
 
-void AALSBaseCharacter::SetActorLocationAndTargetRotation(FVector NewLocation, FRotator NewRotation)
+void AALSBaseCharacter::SetActorLocationAndTargetRotation(const FVector NewLocation, const FRotator NewRotation)
 {
 	SetActorLocationAndRotation(NewLocation, NewRotation);
 	TargetRotation = NewRotation;
@@ -518,7 +515,7 @@ void AALSBaseCharacter::SetMovementModel()
 	MovementData = *OutRow;
 }
 
-void AALSBaseCharacter::SetHasMovementInput(bool bNewHasMovementInput)
+void AALSBaseCharacter::SetHasMovementInput(const bool bNewHasMovementInput)
 {
 	bHasMovementInput = bNewHasMovementInput;
 	MainAnimInstance->GetCharacterInformationMutable().bHasMovementInput = bHasMovementInput;
@@ -594,7 +591,7 @@ bool AALSBaseCharacter::CanSprint() const
 	return false;
 }
 
-void AALSBaseCharacter::SetIsMoving(bool bNewIsMoving)
+void AALSBaseCharacter::SetIsMoving(const bool bNewIsMoving)
 {
 	bIsMoving = bNewIsMoving;
 	MainAnimInstance->GetCharacterInformationMutable().bIsMoving = bIsMoving;
@@ -605,19 +602,19 @@ FVector AALSBaseCharacter::GetMovementInput() const
 	return ReplicatedCurrentAcceleration;
 }
 
-void AALSBaseCharacter::SetMovementInputAmount(float NewMovementInputAmount)
+void AALSBaseCharacter::SetMovementInputAmount(const float NewMovementInputAmount)
 {
 	MovementInputAmount = NewMovementInputAmount;
 	MainAnimInstance->GetCharacterInformationMutable().MovementInputAmount = MovementInputAmount;
 }
 
-void AALSBaseCharacter::SetSpeed(float NewSpeed)
+void AALSBaseCharacter::SetSpeed(const float NewSpeed)
 {
 	Speed = NewSpeed;
 	MainAnimInstance->GetCharacterInformationMutable().Speed = Speed;
 }
 
-float AALSBaseCharacter::GetAnimCurveValue(FName CurveName) const
+float AALSBaseCharacter::GetAnimCurveValue(const FName CurveName) const
 {
 	if (MainAnimInstance)
 	{
@@ -627,7 +624,7 @@ float AALSBaseCharacter::GetAnimCurveValue(FName CurveName) const
 	return 0.0f;
 }
 
-void AALSBaseCharacter::SetRightShoulder(bool bNewRightShoulder)
+void AALSBaseCharacter::SetRightShoulder(const bool bNewRightShoulder)
 {
 	bRightShoulder = bNewRightShoulder;
 	if (CameraBehavior)
@@ -668,7 +665,7 @@ void AALSBaseCharacter::SetAcceleration(const FVector& NewAcceleration)
 	MainAnimInstance->GetCharacterInformationMutable().Acceleration = Acceleration;
 }
 
-void AALSBaseCharacter::RagdollUpdate(float DeltaTime)
+void AALSBaseCharacter::RagdollUpdate(const float DeltaTime)
 {
 	// Set the Last Ragdoll Velocity.
 	const FVector NewRagdollVel = GetMesh()->GetPhysicsLinearVelocity(FName(TEXT("root")));
@@ -702,7 +699,7 @@ void AALSBaseCharacter::SetActorLocationDuringRagdoll(float DeltaTime)
 		}
 	}
 
-	// Determine wether the ragdoll is facing up or down and set the target rotation accordingly.
+	// Determine whether the ragdoll is facing up or down and set the target rotation accordingly.
 	const FRotator PelvisRot = GetMesh()->GetSocketRotation(FName(TEXT("Pelvis")));
 
 	bRagdollFaceUp = PelvisRot.Roll < 0.0f;
@@ -741,7 +738,7 @@ void AALSBaseCharacter::SetActorLocationDuringRagdoll(float DeltaTime)
 	SetActorLocationAndTargetRotation(bRagdollOnGround ? NewRagdollLoc : TargetRagdollLocation, TargetRagdollRotation);
 }
 
-void AALSBaseCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
+void AALSBaseCharacter::OnMovementModeChanged(const EMovementMode PrevMovementMode, const uint8 PreviousCustomMode)
 {
 	Super::OnMovementModeChanged(PrevMovementMode, PreviousCustomMode);
 
@@ -755,13 +752,13 @@ void AALSBaseCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, ui
 	}
 	else if (GetCharacterMovement()->MovementMode == MOVE_Falling)
 	{
-		SetMovementState(EALSMovementState::InAir);
+		SetMovementState(EALSMovementState::Falling);
 	}
 }
 
 void AALSBaseCharacter::OnMovementStateChanged(const EALSMovementState PreviousState)
 {
-	if (MovementState == EALSMovementState::InAir)
+	if (MovementState == EALSMovementState::Falling)
 	{
 		if (MovementAction == EALSMovementAction::None)
 		{
@@ -875,14 +872,14 @@ void AALSBaseCharacter::OnOverlayStateChanged(const EALSOverlayState PreviousSta
 	MainAnimInstance->OverlayState = OverlayState;
 }
 
-void AALSBaseCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
+void AALSBaseCharacter::OnStartCrouch(const float HalfHeightAdjust, const float ScaledHalfHeightAdjust)
 {
 	Super::OnStartCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
 
 	SetStance(EALSStance::Crouching);
 }
 
-void AALSBaseCharacter::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
+void AALSBaseCharacter::OnEndCrouch(const float HalfHeightAdjust, const float ScaledHalfHeightAdjust)
 {
 	Super::OnEndCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
 
@@ -922,7 +919,7 @@ void AALSBaseCharacter::OnLandFrictionReset()
 	GetCharacterMovement()->BrakingFrictionFactor = 0.0f;
 }
 
-void AALSBaseCharacter::SetEssentialValues(float DeltaTime)
+void AALSBaseCharacter::SetEssentialValues(const float DeltaTime)
 {
 	if (GetLocalRole() != ROLE_SimulatedProxy)
 	{
@@ -999,7 +996,7 @@ void AALSBaseCharacter::UpdateCharacterMovement()
 	MyCharacterMovementComponent->SetMaxWalkingSpeed(NewMaxSpeed);
 }
 
-void AALSBaseCharacter::UpdateGroundedRotation(float DeltaTime)
+void AALSBaseCharacter::UpdateGroundedRotation(const float DeltaTime)
 {
 	if (MovementAction == EALSMovementAction::None)
 	{
@@ -1017,7 +1014,7 @@ void AALSBaseCharacter::UpdateGroundedRotation(float DeltaTime)
 			{
 				// Looking Direction Rotation
 				float YawValue;
-				if (Gait == EALSGait::Sprinting)
+				if (Gait == EALSGait::Fast)
 				{
 					YawValue = LastVelocityRotation.Yaw;
 				}
@@ -1079,7 +1076,7 @@ void AALSBaseCharacter::UpdateGroundedRotation(float DeltaTime)
 	// Other actions are ignored...
 }
 
-void AALSBaseCharacter::UpdateInAirRotation(float DeltaTime)
+void AALSBaseCharacter::UpdateInAirRotation(const float DeltaTime)
 {
 	if (RotationMode == EALSRotationMode::VelocityDirection || RotationMode == EALSRotationMode::LookingDirection)
 	{
@@ -1104,9 +1101,9 @@ EALSGait AALSBaseCharacter::GetAllowedGait() const
 	{
 		if (RotationMode != EALSRotationMode::Aiming)
 		{
-			if (DesiredGait == EALSGait::Sprinting)
+			if (DesiredGait == EALSGait::Fast)
 			{
-				return CanSprint() ? EALSGait::Sprinting : EALSGait::Running;
+				return CanSprint() ? EALSGait::Fast : EALSGait::Normal;
 			}
 			return DesiredGait;
 		}
@@ -1114,42 +1111,42 @@ EALSGait AALSBaseCharacter::GetAllowedGait() const
 
 	// Crouching stance & Aiming rot mode has same behaviour
 
-	if (DesiredGait == EALSGait::Sprinting)
+	if (DesiredGait == EALSGait::Fast)
 	{
-		return EALSGait::Running;
+		return EALSGait::Normal;
 	}
 
 	return DesiredGait;
 }
 
-EALSGait AALSBaseCharacter::GetActualGait(EALSGait AllowedGait) const
+EALSGait AALSBaseCharacter::GetActualGait(const EALSGait AllowedGait) const
 {
 	// Get the Actual Gait. This is calculated by the actual movement of the character,  and so it can be different
 	// from the desired gait or allowed gait. For instance, if the Allowed Gait becomes walking,
-	// the Actual gait will still be running untill the character decelerates to the walking speed.
+	// the Actual gait will still be running until the character decelerates to the walking speed.
 
-	const float LocWalkSpeed = MyCharacterMovementComponent->CurrentMovementSettings.WalkSpeed;
-	const float LocRunSpeed = MyCharacterMovementComponent->CurrentMovementSettings.RunSpeed;
+	const float LocSlowSpeed = MyCharacterMovementComponent->CurrentMovementSettings.SlowSpeed;
+	const float LocNormalSpeed = MyCharacterMovementComponent->CurrentMovementSettings.NormalSpeed;
 
-	if (Speed > LocRunSpeed + 10.0f)
+	if (Speed > LocNormalSpeed + 10.0f)
 	{
-		if (AllowedGait == EALSGait::Sprinting)
+		if (AllowedGait == EALSGait::Fast)
 		{
-			return EALSGait::Sprinting;
+			return EALSGait::Fast;
 		}
-		return EALSGait::Running;
+		return EALSGait::Normal;
 	}
 
-	if (Speed >= LocWalkSpeed + 10.0f)
+	if (Speed >= LocSlowSpeed + 10.0f)
 	{
-		return EALSGait::Running;
+		return EALSGait::Normal;
 	}
 
-	return EALSGait::Walking;
+	return EALSGait::Slow;
 }
 
-void AALSBaseCharacter::SmoothCharacterRotation(FRotator Target, float TargetInterpSpeed, float ActorInterpSpeed,
-                                                float DeltaTime)
+void AALSBaseCharacter::SmoothCharacterRotation(const FRotator Target, const float TargetInterpSpeed, const float ActorInterpSpeed,
+                                                const float DeltaTime)
 {
 	// Interpolate the Target Rotation for extra smooth rotation behavior
 	TargetRotation =
@@ -1171,7 +1168,7 @@ float AALSBaseCharacter::CalculateGroundedRotationRate() const
 	return CurveVal * ClampedAimYawRate;
 }
 
-void AALSBaseCharacter::LimitRotation(float AimYawMin, float AimYawMax, float InterpSpeed, float DeltaTime)
+void AALSBaseCharacter::LimitRotation(float AimYawMin, float AimYawMax, const float InterpSpeed, const float DeltaTime)
 {
 	// Prevent the character from rotating past a certain angle.
 	FRotator Delta = AimingRotation - GetActorRotation();
@@ -1201,9 +1198,9 @@ FVector AALSBaseCharacter::GetPlayerMovementInput() const
 	return (Forward + Right).GetSafeNormal();
 }
 
-void AALSBaseCharacter::PlayerForwardMovementInput(float Value)
+void AALSBaseCharacter::PlayerForwardMovementInput(const float Value)
 {
-	if (MovementState == EALSMovementState::Grounded || MovementState == EALSMovementState::InAir)
+	if (MovementState == EALSMovementState::Grounded || MovementState == EALSMovementState::Falling)
 	{
 		// Default camera relative movement behavior
 		const float Scale = UALSMathLibrary::FixDiagonalGamepadValues(Value, GetInputAxisValue("MoveRight/Left")).Key;
@@ -1212,9 +1209,9 @@ void AALSBaseCharacter::PlayerForwardMovementInput(float Value)
 	}
 }
 
-void AALSBaseCharacter::PlayerRightMovementInput(float Value)
+void AALSBaseCharacter::PlayerRightMovementInput(const float Value)
 {
-	if (MovementState == EALSMovementState::Grounded || MovementState == EALSMovementState::InAir)
+	if (MovementState == EALSMovementState::Grounded || MovementState == EALSMovementState::Falling)
 	{
 		// Default camera relative movement behavior
 		const float Scale = UALSMathLibrary::FixDiagonalGamepadValues(GetInputAxisValue("MoveForward/Backwards"), Value)
@@ -1224,12 +1221,12 @@ void AALSBaseCharacter::PlayerRightMovementInput(float Value)
 	}
 }
 
-void AALSBaseCharacter::PlayerCameraUpInput(float Value)
+void AALSBaseCharacter::PlayerCameraUpInput(const float Value)
 {
 	AddControllerPitchInput(LookUpDownRate * Value);
 }
 
-void AALSBaseCharacter::PlayerCameraRightInput(float Value)
+void AALSBaseCharacter::PlayerCameraRightInput(const float Value)
 {
 	AddControllerYawInput(LookLeftRightRate * Value);
 }
@@ -1270,12 +1267,12 @@ void AALSBaseCharacter::JumpReleasedAction()
 
 void AALSBaseCharacter::SprintPressedAction()
 {
-	SetDesiredGait(EALSGait::Sprinting);
+	SetDesiredGait(EALSGait::Fast);
 }
 
 void AALSBaseCharacter::SprintReleasedAction()
 {
-	SetDesiredGait(EALSGait::Running);
+	SetDesiredGait(EALSGait::Normal);
 }
 
 void AALSBaseCharacter::AimPressedAction()
@@ -1387,13 +1384,13 @@ void AALSBaseCharacter::StancePressedAction()
 
 void AALSBaseCharacter::WalkPressedAction()
 {
-	if (DesiredGait == EALSGait::Walking)
+	if (DesiredGait == EALSGait::Slow)
 	{
-		SetDesiredGait(EALSGait::Running);
+		SetDesiredGait(EALSGait::Normal);
 	}
-	else if (DesiredGait == EALSGait::Running)
+	else if (DesiredGait == EALSGait::Normal)
 	{
-		SetDesiredGait(EALSGait::Walking);
+		SetDesiredGait(EALSGait::Slow);
 	}
 }
 
@@ -1449,17 +1446,17 @@ void AALSBaseCharacter::ReplicatedRagdollEnd()
 	}
 }
 
-void AALSBaseCharacter::OnRep_RotationMode(EALSRotationMode PrevRotMode)
+void AALSBaseCharacter::OnRep_RotationMode(const EALSRotationMode PrevRotMode)
 {
 	OnRotationModeChanged(PrevRotMode);
 }
 
-void AALSBaseCharacter::OnRep_ViewMode(EALSViewMode PrevViewMode)
+void AALSBaseCharacter::OnRep_ViewMode(const EALSViewMode PrevViewMode)
 {
 	OnViewModeChanged(PrevViewMode);
 }
 
-void AALSBaseCharacter::OnRep_OverlayState(EALSOverlayState PrevOverlayState)
+void AALSBaseCharacter::OnRep_OverlayState(const EALSOverlayState PrevOverlayState)
 {
 	OnOverlayStateChanged(PrevOverlayState);
 }

@@ -3,7 +3,7 @@
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Source Code:     https://github.com/dyanikoglu/ALSV4_CPP
 // Original Author: Doğa Can Yanıkoğlu
-// Contributors:    
+// Contributors:
 
 
 #include "Character/Animation/ALSPlayerCameraBehavior.h"
@@ -11,7 +11,7 @@
 
 #include "Character/ALSBaseCharacter.h"
 
-void UALSPlayerCameraBehavior::SetRotationMode(EALSRotationMode RotationMode)
+void UALSPlayerCameraBehavior::SetRotationMode(const EALSRotationMode RotationMode)
 {
 	bVelocityDirection = RotationMode == EALSRotationMode::VelocityDirection;
 	bLookingDirection = RotationMode == EALSRotationMode::LookingDirection;
